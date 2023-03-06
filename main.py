@@ -11,7 +11,7 @@ for file in files:
     with open(f'./Input/{file}', 'r') as f:
         lines = f.readlines()
 
-    # Zmienne
+    #Variables
     sweep_number = 1
     splitted_sweeps = [[], []]
     mag = 0
@@ -32,26 +32,27 @@ for file in files:
 
     # Split into separate columns
     i = 0
-    j = 0
     steps_in_cycle = 999
     for line in lines:
-        splitted_sweeps[mag].append(float(line.split(',')[4]))
-        splitted_sweeps[vol].append(float(line.split(',')[24]))
+        fields = line.split(',')
+        if len(fields) >= 5:
+            mag_value = float(fields[4])
+            vol_value = float(fields[24])
+            splitted_sweeps[mag].append(mag_value)
+            splitted_sweeps[vol].append(vol_value)
 
-        if j == 1:
-            steps_in_cycle = find_steps()
+            if len(splitted_sweeps[mag]) == 2:
+                steps_in_cycle = find_steps()
 
-        i += 1
-        j += 1
+            i += 1
+            if i == steps_in_cycle:
+                i = 0
+                splitted_sweeps.append([])
+                splitted_sweeps.append([])
 
-        if i == steps_in_cycle:
-            i = 0
-            splitted_sweeps.append([])
-            splitted_sweeps.append([])
-
-            sweep_number += 1
-            mag += 2
-            vol += 2
+                sweep_number += 1
+                mag += 2
+                vol += 2
 
     splitted_sweeps = splitted_sweeps[:-2]
 
